@@ -5,17 +5,19 @@ import axios from 'axios';
 const Register=()=> {
     const [regUsername,setRegUsername] = useState("");
     const [regPassword,setRegPassword] = useState("");
-    
+    const [role,setRole] = useState("DEFAULT")
     const register=(e:any)=>{
         e.preventDefault();
         axios.post("http://localhost:3001/api/v1/register",{
             username:regUsername,
-            password:regPassword
+            password:regPassword,
+            role:role
         }).then((res)=>{
             console.log(res);
             if(res.statusText==="OK"){
                 setRegUsername("");
                 setRegPassword("");
+                setRole("DEFAULT");
             }
         });
         
@@ -35,6 +37,15 @@ const Register=()=> {
                 <label className='text-lg'>PASSWORD :</label>
                 <input className='border-2 border-slate-400 rounded-md mx-2 px-1' value={regPassword} onChange={(e)=>(setRegPassword(e.target.value))} type="password" />
             </div>
+            <div className='flex py-1'>
+                <label className='text-lg mr-6'>ROLE :</label>
+                <select className="ml-8 px-6  rounded-sm bg-gray-200 text-gray-700 border border-gray-200 font-sans" value={role} name="role" onChange={(e)=>setRole(e.target.value)} >
+                        <option value="DEFAULT" disabled>select role</option>
+                        <option value="admin">admin</option>
+                        <option value="user">user</option>
+                </select>
+            </div>
+            
             <div className='flex justify-end '>
                 <button className=' bg-blue-200 hover:bg-blue-400 rounded-md px-3 py-1' onClick={(e)=>register(e)}>Register</button>
                 

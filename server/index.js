@@ -17,8 +17,9 @@ const db = mysql.createConnection({
 app.post("/api/v1/register", async(req,res)=>{
     const username = req.body.username;
     const password = req.body.password;
+    const role = req.body.role;
     // console.log(req)
-    db.query("INSERT INTO teachers (username,password) VALUES (?,?)",[username,password], 
+    db.query("INSERT INTO teachers (username,password,role) VALUES (?,?,?)",[username,password,role], 
     (err,result)=>{
         if(err) {
             console.log(err)
@@ -26,6 +27,7 @@ app.post("/api/v1/register", async(req,res)=>{
         res.send(result)
     })
 })
+
 app.post("/api/v1/login", async(req,res)=>{
     const username = req.body.username;
     const password = req.body.password;
@@ -43,6 +45,7 @@ app.post("/api/v1/login", async(req,res)=>{
         
     })
 })
+
 
 app.listen(3001,()=>{
     console.log("server started at port:3001")

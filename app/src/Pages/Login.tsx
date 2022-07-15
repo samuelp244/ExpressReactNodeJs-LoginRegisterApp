@@ -21,8 +21,15 @@ const Login=()=> {
                     setUsername("");
                     setPassword("");
                     setErrorMessage(res.data.message)
-                }else{
+                }else if(res.data.role==="user"){
+                    
                     navigate("/dashboard",{
+                        state:{
+                            username:res.data.username
+                        }
+                    })
+                }else if(res.data.role==="admin"){
+                    navigate("/admindashboard",{
                         state:{
                             username:res.data.username
                         }
