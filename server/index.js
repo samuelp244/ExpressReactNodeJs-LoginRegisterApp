@@ -19,7 +19,7 @@ app.post("/api/v1/register", async(req,res)=>{
     const password = req.body.password;
     const role = req.body.role;
     // console.log(req)
-    db.query("INSERT INTO teachers (username,password,role) VALUES (?,?,?)",[username,password,role], 
+    db.query("INSERT INTO users (username,password,role) VALUES (?,?,?)",[username,password,role], 
     (err,result)=>{
         if(err) {
             console.log(err)
@@ -32,7 +32,7 @@ app.post("/api/v1/login", async(req,res)=>{
     const username = req.body.username;
     const password = req.body.password;
     // console.log(req)
-    db.query("SELECT * FROM teachers WHERE username = ? AND password = ?",[username,password], 
+    db.query("SELECT * FROM users WHERE username = ? AND password = ?",[username,password], 
     (err,result)=>{
         if(err) {
             res.send({err:err})
