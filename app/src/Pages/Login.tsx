@@ -1,42 +1,59 @@
-import React,{useState} from 'react';
+import React,{ useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { decodeToken } from "react-jwt";
+
 import axios from "axios";
 
+interface token{
+    iat: number,
+    role: string,
+    username: string
+}
 const Login=()=> {
     const [username,setUsername] = useState("");
     const [password,setPassword] = useState("");
     const [errorMessage,setErrorMessage] = useState("");
 
+    // const [decodedToken,setDecodedToken] = useState<token>()
+    let decodedToken:token|null;
     const navigate = useNavigate();
-
+    
+    
     const login=(e:any)=>{
         e.preventDefault();
+        
         setErrorMessage("");
         axios.post("http://localhost:3001/api/v1/login",{
             username:username,
             password:password
         }).then(res=>{
+            console.log(res)
             if(res.statusText==="OK"){
-                if(res.data.message){
+                if(res.data.user){
+                    decodedToken = decodeToken(res.data.user)
+                    localStorage.setItem('token', res.data.user)
+                    if(decodedToken?.role==="user"){
+                        navigate("/dashboard",{
+                            state:{
+                                username:decodedToken?.username
+                            }
+                        })
+                    }else if(decodedToken?.role==="admin"){
+                        navigate("/admindashboard",{
+                            state:{
+                                username:decodedToken?.username
+                            }
+                        })
+                    } 
+                    }else{
                     setUsername("");
                     setPassword("");
                     setErrorMessage(res.data.message)
-                }else if(res.data.role==="user"){
-                    
-                    navigate("/dashboard",{
-                        state:{
-                            username:res.data.username
-                        }
-                    })
-                }else if(res.data.role==="admin"){
-                    navigate("/admindashboard",{
-                        state:{
-                            username:res.data.username
-                        }
-                    })
-                } 
+                }
+                
+                
             }
-            console.log(res)
+            // console.log(res)
         })
     }
 
